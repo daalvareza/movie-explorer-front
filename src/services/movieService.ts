@@ -17,10 +17,14 @@ export const getMovieDetails = async (id: string) => {
   return response.json();
 };
 
-export const getRecommendations = async (movieId: string) => {
-  const response = await fetch(`${BASE_URL}/?apikey=${API_KEY}&s=batman&page=1`);
+export const getMovieDetailsByTitle = async (title: string) => {
+  const response = await fetch(`${BASE_URL}/?apikey=${API_KEY}&t=${title}`);
   if (!response.ok) {
-    throw new Error('Failed to fetch recommendations');
+    throw new Error('Failed to fetch movie details');
   }
   return response.json();
+};
+
+export const getAllMovieDetails = async (movies: string[]) => {
+  return await Promise.all(movies.map(title => getMovieDetailsByTitle(title)));
 };

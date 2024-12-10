@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import { Typography } from '@mui/material';
+import { CircularProgress, Typography } from '@mui/material';
 import 'swiper/css';
 import 'swiper/css/autoplay';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper';
 import { useQuery } from '@tanstack/react-query';
-import { getMovieDetails, getRecommendations } from '../../services/movieService';
+import { getAllMovieDetails, getMovieDetails } from '../../services/movieService';
 import { Movie } from '../../store/types';
 import {
     AddToFavoriesButton,
     DetailsContainer, 
     InfoContainer, 
+    LoadingPlaceholder, 
     ModalContent, 
     PosterCard, 
     RecommendationCard, 
@@ -23,6 +24,7 @@ import theme from '../../theme';
 import { useDispatch } from 'react-redux';
 import { setSelectedMovieId } from '../../store/moviesSlice';
 import FavoritesFormModal from '../FavoritesFormModal/FavoritesFormModal';
+import { getMovieRecommendations } from '../../services/favoriteService';
 
 interface MovieDetailsModalProps {
   movieId: string | null;
@@ -47,10 +49,18 @@ const MovieDetailsModal: React.FC<MovieDetailsModalProps> = ({
     });
 
     const { data: recommendations } = useQuery({
-        queryKey: ['recommendations', movieId],
-        queryFn: () => getRecommendations(movieId!),
-        enabled: !!movieId,
+        queryKey: ['recommendations', movieDetails?.Title],
+        queryFn: () => getMovieRecommendations(movieDetails?.Title!),
+        enabled: !!movieDetails?.Title,
     });
+
+    const { data: recommendedMovieDetails, isLoading: isLoadingDetails } = useQuery({
+        queryKey: ['recommendedMovieDetails', recommendations],
+        queryFn: () => getAllMovieDetails(recommendations?.data?.movies || []),
+        enabled: Array.isArray(recommendations?.data?.movies) && recommendations.data.movies.length > 0,
+    });
+
+    const isAnyLoading = [isLoading, isLoadingDetails, !recommendations].some(Boolean);
 
     if (!movieDetails) return null;
     if (notes) {
@@ -90,39 +100,48 @@ const MovieDetailsModal: React.FC<MovieDetailsModalProps> = ({
 
                 <Separator />
 
-                {recommendations?.Search?.length > 0 && (
                 <RecommendedSection>
-                    <Typography variant="h5" sx={{ paddingBottom: theme.spacing(2)}}>Recommended Movies</Typography>
-                    <Swiper 
-                        modules={[Autoplay]}
-                        spaceBetween={20}
-                        slidesPerView={5}
-                        autoplay={{ delay: 1, disableOnInteraction: false }}
-                        speed={3000}
-                        loop={true}
-                        grabCursor={true}
-                        freeMode={true}
-                        breakpoints={{
-                            640: { slidesPerView: 2, spaceBetween: 10 },
-                            768: { slidesPerView: 3, spaceBetween: 15 },
-                            1024: { slidesPerView: 5, spaceBetween: 20 },
-                        }}
-                    >
-                        {recommendations.Search.map((rec: Movie) => (
-                            <SwiperSlide key={rec.imdbID}>
-                                <RecommendationCard onClick={() => dispatch(setSelectedMovieId(rec.imdbID))}>
-                                    <RecommendationImage
-                                        src={rec.Poster !== "N/A" ? rec.Poster : "/placeholder.png"}
-                                        alt={rec.Title}
-                                        style={{ maxHeight: "15rem", borderRadius: "4px"}}
-                                    />
-                                    <Typography variant="subtitle1" align="center">{rec.Title}</Typography>
-                                </RecommendationCard>
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
+                    <Typography variant="h5" sx={{ paddingBottom: theme.spacing(2) }}>
+                        Recommended Movies
+                    </Typography>
+                    {isAnyLoading ? (
+                        <LoadingPlaceholder>
+                            <CircularProgress />
+                        </LoadingPlaceholder>                        
+                    ) : Array.isArray(recommendedMovieDetails) && recommendedMovieDetails.length > 0 ? (
+                        <Swiper
+                            modules={[Autoplay]}
+                            spaceBetween={20}
+                            slidesPerView={5}
+                            autoplay={{ delay: 3000, disableOnInteraction: false }}
+                            loop={true}
+                            grabCursor={true}
+                            breakpoints={{
+                                640: { slidesPerView: 2, spaceBetween: 10 },
+                                768: { slidesPerView: 3, spaceBetween: 15 },
+                                1024: { slidesPerView: 5, spaceBetween: 20 },
+                            }}
+                        >
+                            {recommendedMovieDetails.map((movie: Movie) => (
+                                <SwiperSlide key={movie.imdbID}>
+                                    <RecommendationCard onClick={() => dispatch(setSelectedMovieId(movie.imdbID))}>
+                                        <RecommendationImage
+                                            src={movie.Poster !== "N/A" ? movie.Poster : "/placeholder.png"}
+                                            alt={movie.Title}
+                                            style={{ maxHeight: "15rem", borderRadius: "4px" }}
+                                        />
+                                        <Typography variant="subtitle1" align="center">
+                                            {movie.Title}
+                                        </Typography>
+                                    </RecommendationCard>
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+                    ) : (
+                        <Typography>No recommended movies available.</Typography>
+                    )}
                 </RecommendedSection>
-                )}
+
             </ModalContent>
         </StyledModal>
         <FavoritesFormModal 

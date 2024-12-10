@@ -62,3 +62,11 @@ export const RecommendationImage = styled("img")(() => ({
     objectFit: "cover",
     borderRadius: "4px",
 }));
+
+export const LoadingPlaceholder = styled('div')({
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '15rem',
+    borderRadius: '4px',
+});
