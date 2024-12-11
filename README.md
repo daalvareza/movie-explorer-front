@@ -90,13 +90,8 @@ Movie Explorer is a comprehensive React-based application for browsing and manag
     yarn install
     ```
 
-3. **Set Environment Variables**:
-    Create a `.env` file in the root of the project and add the following:
-    ```env
-    REACT_APP_OMDB_API_KEY=your_omdb_api_key
-    REACT_APP_OPENAI_API_KEY=your_openai_api_key
-    REACT_APP_BACKEND_URL=http://localhost:5000
-    ```
+3. **Set API URL**:
+    In the `favoriteService.ts` update the `BASE_URL` value with the API you want to use, by default is the node.js API deployed on Render
 
 4. **Run the Application**:
     ```bash
