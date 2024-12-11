@@ -1,46 +1,143 @@
-# Getting Started with Create React App
+# Movie Explorer React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+Movie Explorer is a comprehensive React-based application for browsing and managing a personalized list of favorite movies. It features a clean architecture, state management with Redux Toolkit, and asynchronous data fetching with `react-query`. The app also integrates with OpenAI to recommend movies based on user preferences.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+1. **Movie Search**: Search for movies using the OMDB API and display search results in a grid format.
+2. **Movie Details Modal**: View detailed information about a movie, including title, genre, plot, and a poster image.
+3. **Favorites Management**: Add, update, and remove movies in the user's favorites list.
+4. **Login Modal**: Log in or sign up to personalize the experience, utilizing a simple REST API.
+5. **Movie Recommendations**: Uses OpenAI integration to recommend movies based on user interactions.
+6. **Pagination**: Navigate through multiple pages of search results.
+7. **Header with Search Bar**: Includes a search input, favorites count, and a login button with a dropdown for authentication.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+---
 
-### `npm test`
+## Components
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 1. `MovieSearch`
+  - Search for movies using a query string.
+  - Pagination for browsing large results.
+  - Movie cards display the poster and title.
 
-### `npm run build`
+### 2. `MovieDetailsModal`
+  - Fetches additional details about a movie using its `imdbID`.
+  - Allows users to add the movie to their favorites.
+  - Includes OpenAI-based recommendations for similar movies.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 3. `FavoritesView`
+  - Fetches movie posters for favorite movies dynamically.
+  - Allows users to remove movies from their favorites.
+  - Opens `MovieDetailsModal` for detailed views.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 4. `LoginModal`
+  - Saves a JWT token for authentication.
+  - Displays error messages for failed attempts.
+  - Switches between login and signup modes.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 5. `Header`
+  - Includes a search bar to initiate movie searches.
+  - Displays a favorites count button that navigates to the `FavoritesView`.
+  - Provides a login icon to toggle the `LoginModal`.
 
-### `npm run eject`
+### 6. `FavoritesFormModal`
+  - Validates user authentication before submission.
+  - Dynamically updates the Redux state and persists data using API calls.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### 7. `MovieSearchContainer`
+  - Manages movie search queries and pagination.
+  - Handles rendering of the MovieSearch component for displaying results.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Tools & Technologies
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- **React**: Component-based library for building user interfaces.
+- **Redux Toolkit**: Manages global state, including favorites and authentication.
+- **React Query**: Handles asynchronous data fetching and caching.
+- **Material-UI (MUI)**: Provides a styled component library for UI elements.
+- **TypeScript**: Ensures type safety and code reliability.
+- **Jest & React Testing Library**: Unit testing framework and utilities.
+- **OpenAI API**: Generates movie recommendations.
+- **OMDB API**: Fetches movie details and search results.
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Running the Project Locally
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Prerequisites
+
+- Node.js (>= 16.x)
+- npm or yarn
+
+### Setup Instructions
+
+1. **Clone the Repository**:
+    ```bash
+    git clone https://github.com/yourusername/movie-explorer.git
+    cd movie-explorer/react-app
+    ```
+
+2. **Install Dependencies**:
+    ```bash
+    npm install
+    # or
+    yarn install
+    ```
+
+3. **Set Environment Variables**:
+    Create a `.env` file in the root of the project and add the following:
+    ```env
+    REACT_APP_OMDB_API_KEY=your_omdb_api_key
+    REACT_APP_OPENAI_API_KEY=your_openai_api_key
+    REACT_APP_BACKEND_URL=http://localhost:5000
+    ```
+
+4. **Run the Application**:
+    ```bash
+    npm start
+    # or
+    yarn start
+    ```
+
+5. **Run Tests**:
+    ```bash
+    npm test
+    # or
+    yarn test
+    ```
+
+---
+
+## How It Works
+
+1. **Search Flow**:
+   - The user enters a movie title to search in the `Header` component.
+   - `useMovies` fetches results from the OMDB API.
+   - Results are displayed in the `MovieSearch` grid.
+
+2. **Favorites Flow**:
+   - Users can add movies to their favorites from the `MovieDetailsModal`.
+   - Favorites are stored in the Redux state and persisted using `favoriteService`.
+
+3. **Recommendations Flow**:
+   - OpenAI API provides recommendations for movies based on user preferences.
+   - Recommendations are displayed in a `Swiper` slider in the `MovieDetailsModal`.
+
+4. **Authentication**:
+   - The `LoginModal` handles login and signup.
+   - JWT tokens are stored in `localStorage` for authenticated requests.
+
+---
+
+## Future Enhancements
+
+- Implement advanced filters for movie search.
+- Add user profile management.
+- Improve test coverage for all components and services.
+- Optimize the recommendation algorithm using user interaction history.
