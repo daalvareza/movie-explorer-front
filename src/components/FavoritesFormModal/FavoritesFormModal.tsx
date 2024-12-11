@@ -1,12 +1,11 @@
 import { Button, TextField, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { FormContent, FormModal } from './FavoritesFormModal.styled';
-import { Favorite, Movie } from '../../store/types';
+import { Favorite } from '../../store/types';
 import { addFavorite, updateFavorite } from '../../store/favoritesSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import { addFavoriteToUser, updateUserFavorite } from '../../services/favoriteService';
-import { getMovieDetails } from '../../services/movieService';
 
 interface FavoritesFormModalProps {
     isFormOpen: boolean;

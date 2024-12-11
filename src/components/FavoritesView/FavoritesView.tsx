@@ -43,6 +43,7 @@ const FavoritesView: React.FC = () => {
               return {
                 ...favorite,
                 Poster: movieDetails.Poster !== 'N/A' ? movieDetails.Poster : '/placeholder.png',
+                imdbID: favorite.imdbID || 'unknown',
               };
             } catch (error) {
               console.error(`Failed to fetch details for ${favorite.imdbID}`, error);
@@ -58,14 +59,14 @@ const FavoritesView: React.FC = () => {
   return (
     <Box>
       <MoviesContainer container>
-        {favoritesWithPosters.map((movie) => (
-          <MovieItem key={movie.imdbID}>
+        {favoritesWithPosters.map((movie, index) => (
+          <MovieItem key={movie.imdbID || `${movie.Title}-${index}`}>
             <MovieCard onClick={() => handleCardClick(movie)}>
               <MoviePoster
                 image={movie.Poster}
               />
               <MovieCardContent>
-                <MovieTitle variant="h6" align="center">
+                <MovieTitle variant="h6" align="center" data-testid="movie-title">
                   {movie.Title}
                 </MovieTitle>
               </MovieCardContent>

@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { CircularProgress, Typography } from '@mui/material';
-import 'swiper/css';
-import 'swiper/css/autoplay';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper';
 import { useQuery } from '@tanstack/react-query';
