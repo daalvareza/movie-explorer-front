@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { setUserId, setUserName } from "../../store/authSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
+import { useNavigate } from 'react-router-dom';
 
 interface LoginModalProps {
     isOpen: boolean;
@@ -20,6 +21,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
     const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
 
     const userName = useSelector((state: RootState) => state.auth.userName);
     const resetError = () => setError(null);
@@ -52,6 +54,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
         localStorage.removeItem("token");
         dispatch(setUserId(null));
         dispatch(setUserName(null));
+        navigate('/');
     };
 
     if (!isOpen) return null;

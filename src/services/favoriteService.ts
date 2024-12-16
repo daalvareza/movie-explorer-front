@@ -1,7 +1,6 @@
 import { Movie } from "../store/types";
 
-//const BASE_URL = 'https://node-api-service-ugki.onrender.com';
-const BASE_URL = 'http://localhost:3001';
+const BASE_URL = 'https://node-api-service-ugki.onrender.com';
 
 export const login = async (email: string, password: string) => {
     const response = await fetch(`${BASE_URL}/auth/login`, {
