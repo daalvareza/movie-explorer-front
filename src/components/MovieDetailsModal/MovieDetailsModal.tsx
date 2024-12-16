@@ -22,7 +22,7 @@ import theme from '../../theme';
 import { useDispatch } from 'react-redux';
 import { setSelectedMovieId } from '../../store/moviesSlice';
 import FavoritesFormModal from '../FavoritesFormModal/FavoritesFormModal';
-import { getMovieRecommendations } from '../../services/favoriteService';
+import { getMovieRecommendations, getMovieSentiment } from '../../services/favoriteService';
 
 interface MovieDetailsModalProps {
   movieId: string | null;
@@ -58,13 +58,25 @@ const MovieDetailsModal: React.FC<MovieDetailsModalProps> = ({
         enabled: Array.isArray(recommendations?.data?.movies) && recommendations.data.movies.length > 0,
     });
 
-    const isAnyLoading = [isLoading, isLoadingDetails, !recommendations].some(Boolean);
+    const { data: sentiment, isLoading: isLoadingSentiment } = useQuery({
+        queryKey: ['sentiment', movieDetails?.imdbID],
+        queryFn: () => getMovieSentiment(movieDetails?.imdbID!),
+        enabled: !!movieDetails?.imdbID,
+    });
+
+    const isAnyLoading = [isLoading, isLoadingDetails, !recommendations, isLoadingSentiment].some(Boolean);
 
     if (!movieDetails) return null;
     if (notes) {
         movieDetails = {
             ...movieDetails,
             Notes: notes,
+        };
+    }
+    if (sentiment?.data?.sentiment) {
+        movieDetails = {
+            ...movieDetails,
+            Sentiment: sentiment.data.sentiment,
         };
     }
 
@@ -75,7 +87,7 @@ const MovieDetailsModal: React.FC<MovieDetailsModalProps> = ({
                 <DetailsContainer>
                     <PosterCard>
                         <img
-                            src={movieDetails.Poster !== "N/A" ? movieDetails.Poster : "/placeholder.png"}
+                            src={movieDetails.Poster !== "N/A" ? movieDetails.Poster : "/placeholder.jpg"}
                             alt={movieDetails.Title}
                             style={{ maxHeight: "20rem", borderRadius: "4px"}}
                         />
@@ -85,7 +97,8 @@ const MovieDetailsModal: React.FC<MovieDetailsModalProps> = ({
                         <Typography><b>Year:</b> {movieDetails.Year}</Typography>
                         <Typography><b>Genre:</b> {movieDetails.Genre}</Typography>
                         <Typography><b>Plot:</b> {movieDetails.Plot}</Typography>
-                        {notes && (<Typography><b>Notes:</b> {notes}</Typography>)}
+                        {movieDetails.Notes && (<Typography><b>Your Notes:</b> {movieDetails.Notes}</Typography>)}
+                        {movieDetails.Sentiment && (<Typography><b>Overall Sentiment:</b> {movieDetails.Sentiment}</Typography>)}
                         <AddToFavoriesButton
                             variant="contained"
                             color="secondary"

@@ -24,7 +24,7 @@ const MovieSearch: React.FC<MovieSearchProps> = ({
                     <MovieItem key={movie.imdbID}>
                         <MovieCard onClick={() => onSelect(movie.imdbID)}>
                             <MoviePoster
-                                image={movie.Poster !== 'N/A' ? movie.Poster : '/placeholder.png'}
+                                image={movie.Poster !== 'N/A' ? movie.Poster : '/placeholder.jpg'}
                             />
                             <MovieCardContent>
                                 <MovieTitle variant="h6" align="center">

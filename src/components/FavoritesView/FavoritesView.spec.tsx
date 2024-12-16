@@ -74,10 +74,10 @@ describe('FavoritesView Component', () => {
     };
 
     test('renders favorite movies with posters', async () => {
-        await renderComponent();
+        renderComponent();
       
         await waitFor(() => {
-            mockFavorites.forEach((movie) => {
+            mockFavorites.forEach(() => {
                 expect(screen.getByTestId('movie-title')).toBeInTheDocument();
             });
         });

@@ -1,6 +1,7 @@
 import { Movie } from "../store/types";
 
-const BASE_URL = 'https://node-api-service-ugki.onrender.com';
+//const BASE_URL = 'https://node-api-service-ugki.onrender.com';
+const BASE_URL = 'http://localhost:3001';
 
 export const login = async (email: string, password: string) => {
     const response = await fetch(`${BASE_URL}/auth/login`, {
@@ -90,7 +91,15 @@ export const getMovieRecommendations = async (favorite: Movie) => {
     const encodedTitle = encodeURIComponent(favorite.Title);
     const response = await fetch(`${BASE_URL}/ai/movie-recommendations?movieName=${encodedTitle}`);
     if (!response.ok) {
-        throw new Error('Failed to get user favorites');
+        throw new Error('Failed to get movie recommendations');
+    }
+    return response.json();
+}
+
+export const getMovieSentiment = async (movieId: string) => {
+    const response = await fetch(`${BASE_URL}/ai/movie-sentiment/${movieId}`);
+    if (!response.ok) {
+        throw new Error('Failed to get movie sentiment');
     }
     return response.json();
 }

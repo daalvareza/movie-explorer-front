@@ -50,7 +50,8 @@ const Header: React.FC = () => {
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
                         onKeyDown={handleKeyDown}
                         endAdornment={
-                            <InputAdornment 
+                            <InputAdornment
+                                data-testid="search-icon"
                                 position="start"
                                 onClick={() => dispatch(setQuery(search))}
                                 sx={{ cursor: "pointer" }}
@@ -61,7 +62,7 @@ const Header: React.FC = () => {
                     />
                 </SearchContainer>
                 {userId && (
-                    <Button color="inherit" onClick={() => navigate('/favorites')}>
+                    <Button color="inherit" onClick={() => navigate('/favorites')} data-testid="account-icon-button">
                         View Favorites ({favoritesCount})
                     </Button>
                 )}

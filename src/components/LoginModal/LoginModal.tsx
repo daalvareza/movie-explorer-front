@@ -63,6 +63,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                 e.stopPropagation();
                 onClose()
             }}
+            data-testid="login-modal"
         >
             <FloatingLogin onClick={(e) => e.stopPropagation()}>
                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>

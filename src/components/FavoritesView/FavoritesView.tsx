@@ -42,12 +42,12 @@ const FavoritesView: React.FC = () => {
               const movieDetails = await getMovieDetails(favorite.imdbID);
               return {
                 ...favorite,
-                Poster: movieDetails.Poster !== 'N/A' ? movieDetails.Poster : '/placeholder.png',
+                Poster: movieDetails.Poster !== 'N/A' ? movieDetails.Poster : '/placeholder.img',
                 imdbID: favorite.imdbID || 'unknown',
               };
             } catch (error) {
               console.error(`Failed to fetch details for ${favorite.imdbID}`, error);
-              return { ...favorite, poster: '/placeholder.png' };
+              return { ...favorite, poster: '/placeholder.img' };
             }
           })
         );
